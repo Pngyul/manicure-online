@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- 页面meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>预约管理</title>
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="plugins/adminLTE/css/AdminLTE.css">
+    <link rel="stylesheet" href="plugins/adminLTE/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="css/style.css">
+	<script src="plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="plugins/bootstrap/js/bootstrap.min.js"></script>
+
+	<script type="text/javascript" src="plugins/angularjs/angular.min.js"></script>
+	<!-- 分页组件开始 -->
+	<script src="plugins/angularjs/pagination.js"></script>
+	<link rel="stylesheet" href="plugins/angularjs/pagination.css">
+	<!-- 分页组件结束 -->
+	<script type="text/javascript" src="js/base_pagination.js"></script>
+	<script type="text/javascript" src="../js/service/bookService.js"></script>
+	<script type="text/javascript" src="js/controller/baseController.js"></script>
+	<script type="text/javascript" src="../js/controller/bookController.js"></script>
+	<script type="text/javascript" src="js/selectall.js"></script>
+    
+</head>
+
+<body class="hold-transition skin-red sidebar-mini" ng-app="manicure" ng-controller="bookController" >
+  <!-- .box-body -->
+                
+                    <div class="box-header with-border">
+                        <h3 class="box-title">预约管理
+                       	</h3>
+                    </div>
+
+  <div class="box-body">
+
+	  <!-- 数据表格 -->
+	  <div class="table-box">
+
+		  <!--工具栏-->
+		  <div class="pull-left">
+			  <div class="form-group form-inline">
+				  <div class="btn-group">
+					  <button type="button"  class="btn btn-default" title="线下预约" ng-click="entity={}" data-toggle="modal" data-target="#editModal"><i class="fa fa-ban"></i>线下预约</button>
+					  <button type="button" ng-click="updateStatus('1')" class="btn btn-default" title="接单"><i class="fa fa-ban"></i>接单</button>
+					  <button type="button" ng-click="updateStatus('2')" class="btn btn-default" title="拒单"><i class="fa fa-ban"></i>拒单</button>
+					  <button type="button" ng-click="updateStatus('3')" class="btn btn-default" title="交易已完成"><i class="fa fa-ban"></i>交易已完成</button>
+					  <button type="button" ng-click="updateStatus('4')" class="btn btn-default" title="交易已完成"><i class="fa fa-ban"></i>关闭交易</button>
+					  <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();">刷新</button>
+				  </div>
+			  </div>
+		  </div>
+		  <div class="box-tools pull-right">
+			  <div class="has-feedback">
+				  预约类型：<select ng-model="searchEntity.type">
+				  <option value="">全部</option>
+				  <option value="1">网上预约</option>
+				  <option value="2">线下预约</option>
+			  </select>
+				  状态：<select ng-model="searchEntity.status">
+				  <option value="">全部</option>
+				  <option value="0">未接单</option>
+				  <option value="1">已接单</option>
+				  <option value="2">已拒绝</option>
+				  <option value="3">交易完成</option>
+				  <option value="4">交易关闭</option>
+			  </select>
+				  用户名称：<input ng-model="searchEntity.uId">
+				  <button class="btn btn-default" ng-click="reloadList()">查询</button>
+			  </div>
+		  </div>
+		  <!--工具栏/-->
+
+		  <!--数据列表-->
+		  <table id="dataList" class="table table-bordered table-striped table-hover dataTable">
+			  <thead>
+			  <tr>
+				  <th class="" style="padding-right:0px">
+					  <input name="all" id="selall" type="checkbox" class="icheckbox_square-blue" ng-click="IsSelectAll($event)">
+				  </th>
+				  <th class="text-center">姓名</th>
+				  <th class="text-center">电话</th>
+				  <th class="text-center">到达时间</th>
+				  <th class="text-center">预约状态</th>
+				  <th class="">操作</th>
+			  </tr>
+			  </thead>
+			  <tbody id="tb">
+
+			  <tr ng-repeat="item in list">
+				  <td><input name="id" type="checkbox" ng-click="updateSelection($event,item.id)" onclick="userCheck(this)"></td>
+				  <td class="text-center">{{item.contact}}</td>
+				  <td class="text-center">{{item.mobile}}</td>
+				  <td class="text-center">{{item.arriveTime.substring(0,10)}}</td>>
+				  <td class="text-center">
+					  {{strStatus[item.status]}}
+				  </td>
+				  <td class="">
+					  <button type="button" class="btn bg-olive btn-xs" ng-click="findOne(item.id)" data-toggle="modal" data-target="#editModal">查看详细</button>
+					  <button type="button" class="btn bg-olive btn-xs" ng-if="item.status==0" ng-click="updateOneStatus('1',item.id)">接单</button>
+					  <button type="button" class="btn bg-olive btn-xs" ng-if="item.status==0" ng-click="updateOneStatus('2',item.id)">拒单</button>
+					  <button type="button" class="btn bg-olive btn-xs" ng-if="item.status==1" ng-click="updateOneStatus('3',item.id)">交易已完成</button>
+					  <button type="button" class="btn bg-olive btn-xs" ng-if="item.status==2" ng-click="updateOneStatus('4',item.id)">关闭交易</button>
+					  <button type="button" class="btn bg-olive btn-xs" ng-if="item.status==3" ng-click="updateOneStatus('4',item.id)">关闭交易</button>
+				  </td>
+			  </tr>
+			  </tbody>
+		  </table>
+		  <!--数据列表/-->
+		  <tm-pagination conf="paginationConf"></tm-pagination>
+
+	  </div>
+	  <!-- 数据表格 /-->
+
+
+  </div>
+  <!-- /.box-body -->
+              
+                                
+<!-- 编辑窗口 -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" >
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3>{{entity.id==null?'线下预约编辑':'个人预约详细'}}</h3>
+		</div>
+		<div class="modal-body">							
+			
+			<table class="table table-bordered table-striped"  width="800px">
+
+		      	<tr ng-if="entity.id!=null">
+		      		<td>预约ID</td>
+		      		<td><input type="text" class="form-control" ng-model="entity.id"></td>
+		      	</tr>
+				<tr>
+					<td>联系人</td>
+					<td><input type="text" class="form-control" ng-model="entity.contact"></td>
+				</tr>
+				<tr ng-if="entity.id!=null">
+					<td>用户名</td>
+					<td><input type="text" class="form-control" ng-model="entity.uId"></td>
+				</tr>
+				<tr>
+					<td>电话</td>
+					<td><input type="text" class="form-control" ng-model="entity.mobile"></td>
+				</tr>
+				<tr ng-if="entity.id!=null">
+					<td>提交时间</td>
+					<td><input type="text" class="form-control" ng-model="entity.createTime"></td>
+				</tr>
+				<tr  ng-if="entity.id==null">
+					<td>到达时间</td>
+					<td><input type="date" class="form-control" ng-model="entity.arriveTime"></td>
+				</tr>
+				<tr  ng-if="entity.id!=null">
+					<td>到达时间</td>
+					<td><input type="text" class="form-control" ng-model="entity.arriveTime"></td>
+				</tr>
+				<tr>
+					<td>用户备注</td>
+					<td><textarea class="form-control" ng-model="entity.notes" rows="3"></textarea></td>
+				</tr>
+
+			 </table>				
+			
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-success" data-dismiss="modal" ng-if="entity.id==null" aria-hidden="true" ng-click="unlineAdd()">保存</button>
+			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</button>
+		</div>
+	  </div>
+	</div>
+</div>
+</body>
+</html>

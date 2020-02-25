@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zxx">
+   <head>
+      <title>预约服务</title>
+      <!--meta tags -->
+      <meta charset="UTF-8">
+      
+      <link href="plugins/bootstrap.min.css" rel="stylesheet" type="text/css" media="all">
+      <link href="css/style0.css" rel='stylesheet' type='text/css' media="all">
+      <link rel="stylesheet" type="text/css" href="css/webbase.css" />
+       <script type="text/javascript" src="plugins/angularjs/angular.min.js">  </script>
+       <script type="text/javascript" src="js/base.js">  </script>
+       <script type="text/javascript" src="js/service/userService.js">  </script>
+       <script type="text/javascript" src="js/service/bookService.js">  </script>
+       <script type="text/javascript" src="js/controller/baseController.js">  </script>
+       <script type="text/javascript" src="js/controller/bookController.js">  </script>
+   </head>
+   <body ng-app="manicure" ng-controller="bookController" ng-init="getUserName();getByUsername()">
+   	    <div id="nav-bottom">
+		    <style type="text/css">
+                a {color: #000}
+            </style>
+		<!--顶部-->
+		<div class="nav-top">
+			<div class="top">
+				<div class="py-container">
+					<div class="shortcut">
+						<ul class="fl">
+						<li class="f-item">美品汇欢迎您！</li>
+						<li class="f-item" ng-if="loginName==null">请<a href="login.html" target="_blank" style="color:#28a3ef">登录</a>　<span><a href="register.html" target="_blank" style="color:#28a3ef">免费注册</a></span></li>
+						<li class="f-item" ng-if="loginName!=null">{{loginName}}　<span><a href="/logout" target="_blank" style="color:#28a3ef">退出</a></span></li>
+					</ul>
+						<ul class="fr">
+							<li class="f-item"><a href="#">预约美甲服务</a></li>
+							<li class="f-item space"></li>
+							<li class="f-item"><a href="home-index.html">我的订单</a></li>
+							<li class="f-item space"></li>
+							<li class="f-item"><a href="home-setting-info.html">个人中心</a></li>
+							<li class="f-item space"></li>
+							<li class="f-item"><a href="#">唯美甲会员</a></li>
+							<li class="f-item space"></li>
+							<li class="f-item"><a href="../admin/login.html">商家后台</a></li>
+							<li class="f-item space"></li>
+							<li class="f-item"><a href="#">留言</a></li>
+							<li class="f-item space"></li>
+							<li class="f-item"><a href="#">网站导航</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+   	
+      <div class="inner_page-banner one-img"></div>
+      <!--contact -->
+      <section class="contact py-lg-4 py-md-3 py-sm-3 py-3">
+         <div class="container  py-md-4 py-sm-4 py-3">
+            <h3 class="title text-left mb-lg-5 mb-md-4 mb-sm-4 mb-3">预约服务</h3>
+            <div class="agile-info-para">
+               <div class="row contact-wls-detail">
+                  <div class="col-lg-6 col-md-6 contact-form">
+                     <div class="agile-wls-contact-mid">
+                        <p class="groom-right pb-lg-4 pb-3">生活总是需要不同的小情调，你是否也厌倦了一成不变的纯色指甲油?下面分享几款创意美甲图案，
+                        	也许能为你带来一些灵感，给自己换上一个全新的美美的美甲图案吧!
+                        </p>
+                        <form> 
+                           <div class="form-group contact-forms">
+                              <label class="sub-title-w3layouts">您的姓名</label>
+                              <input type="text" ng-model="entity.contact" class="form-control" placeholder="请输入您的姓名">
+                           </div>
+                           <div class="form-group contact-forms">
+                              <label class="sub-title-w3layouts">电话</label>
+                              <input type="text" class="form-control" ng-model="entity.mobile" placeholder="请输入电话号码">
+                           </div>
+                           <div class="form-group contact-forms">
+                              <label class="sub-title-w3layouts">时间</label>
+                              <input type="date" class="form-control" ng-model="entity.arriveTime" value="2019-06-03"/>
+                              	<!--<select class="form-control" name="category1" required>
+												<option value="">选择时间</option>
+												<option value="">8am - 10am</option>
+												<option value="">10am - 12pm</option>
+												<option value="">12pm - 4pm</option>
+												<option value="">4pm - 7pm</option>
+												<option value="">7pm - 9pm</option>
+								</select>-->
+                           </div>
+                           <div class="form-group contact-forms">
+                              <label class="sub-title-w3layouts">备注</label>
+                              <textarea class="form-control" ng-model="entity.notes" rows="3"></textarea>
+                           </div>
+                           <button  class="btn btn-block sent-butnn" ng-click="book()">预约</button>
+                        </form>
+                     </div>
+                  </div>
+                  <div class="col-lg-6 col-md-6 contactright">
+                     <div class="footer_grid_left text-center mb-4">
+                        <div class="contact_footer_grid_left text-center mb-3">
+                           <h5>店铺的地址</h5>
+                        </div>
+                        <p>广东省深圳市南山区滨海公路<br>蛇口大道 168 号</p>
+                     </div>
+                     <div class="footer_grid_left text-center mb-4">
+                        <div class="contact_footer_grid_left text-center mb-3">
+                           <h5>咨询电话</h5>
+                        </div>
+                        <p>+(034) 877 9889 998 <br>+(032) 123 4565 354</p>
+                     </div>
+                     <div class="footer_grid_left text-center mb-4">
+                        <div class="contact_footer_grid_left text-center mb-3">
+                           <h5>Email</h5>
+                        </div>
+                        <p><a href="javascript:;">meipinhui.dev@gmail.com</a> 
+                           <br><a href="javascript:;">meipinhui@163.com</a>
+                        </p>
+                     </div>
+                     <div class="address_mail_footer_grids">
+                        <iframe src="img/tao/001.jpg"></iframe>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+
+        <div class="box-body container">
+
+            <!-- 数据表格 -->
+            <div class="table-box">
+
+                <!--工具栏-->
+                <div class="pull-left">
+                    <h3>预约记录</h3>
+                </div>
+
+                <!--工具栏/-->
+
+                <!--数据列表-->
+                <table id="dataList" class="table  " style="font-size:14px;line-height:34px;color:#000">
+                    <thead>
+                    <tr >
+                        <th class="sorting">姓 名</th>
+                        <th class="sorting">联系电话</th>
+                        <th class="sorting">提交时间</th>
+                        <th class="sorting">到店时间</th>
+                        <th class="sorting">备 注</th>
+                        <th class="sorting">预约状态</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="service in mylist">
+                            <td>{{service.contact}}</td>
+                            <td>{{service.mobile}}</td>
+                            <td>{{service.createTime}}</td>
+                            <td>{{service.arriveTime.substring(0,10)}}</td>
+                            <td>{{service.notes}}</td>
+                            <td>{{strStatus[service.status]}}</td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+                <!--数据列表/-->
+            </div>
+            <!-- 数据表格 /-->
+        </div>
+   </body>
+   
+</html>
